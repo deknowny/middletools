@@ -1,0 +1,2 @@
+class CallNextNotUsedError(Exception):
+    pass

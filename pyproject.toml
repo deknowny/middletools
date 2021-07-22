@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "middlewares"
+version = "0.1.0"
+description = "This python library allows you integrate async-await middleware-based system to your project"
+authors = ["deknowny <deknowny@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+[tool.poetry.dev-dependencies]
+black = "^21.7b0"
+isort = "^5.9.2"
+mypy = "^0.910"
+tox = "^3.24.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
