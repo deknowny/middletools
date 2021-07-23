@@ -1,6 +1,17 @@
+# IDE storage
 .idea/
+
+# MacOS's finder storage
 .DS_Store
+
+# Python cache
 __pycache__/
+
+# Enviroment sotrage
 .venv/
+
+# My drafts and notes
 .drafts/
+
+# Poetry cache
 poetry.lock

@@ -2,7 +2,7 @@ import asyncio
 import enum
 import typing
 
-from middlewares.exceptions import CallNextNotUsedError
+from middlewares.exceptions import CallNextNotUsedError, NothingReturnedError
 from middlewares.types import MiddlewareHandler, InboxType, OutboxType
 
 
@@ -13,8 +13,14 @@ async def read_forewords(
     for middleware in middlewares:
         call_next_give_control = asyncio.Future()
         call_next_return_control = asyncio.Future()
-        call_next = _call_next_bounder(call_next_give_control, call_next_return_control)
-        middleware_dispatching = asyncio.create_task(middleware(inbox_value, call_next))
+        middleware_dispatching = asyncio.create_task(
+            _done_mock(
+                call_next_give_control,
+                call_next_return_control,
+                middleware,
+                inbox_value
+            )
+        )
         # Wait when middleware call `call_next` or not called at all
         giving_control_reason = await call_next_give_control
         if giving_control_reason == _GiveControlReason.CALL_NEXT_IGNORED:
@@ -74,6 +80,8 @@ def _read_afterwords_bounder(*twitched_middlewares: _MiddlewareDispatchingInfo):
     async def read_afterword(outbox_value):
         for dispatching_info in reversed(twitched_middlewares):
             dispatching_info.call_next_return_control.set_result(outbox_value)
-            await dispatching_info.running_task
+            middleware_result = await dispatching_info.running_task
+            if middleware_result is None:
+                raise NothingReturnedError("Middleware returned nothing and declined dispatching")
 
     return read_afterword
