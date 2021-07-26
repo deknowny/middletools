@@ -60,7 +60,7 @@ import middlewares
 # Adding a middleware handler to an abstract 
 @router.add_middleware
 async def my_middleware(
-        request: SomeRequest, call_next: middlewares.types.CallNext
+    request: SomeRequest, call_next: middlewares.types.CallNext
 ) -> SomeResponse:
     # Just check if header exists, id not set the default value
     if "X-Required-Header" not in request.headers:
@@ -102,7 +102,7 @@ class Router:
 When we do all our stuff and get the router response we can call `await read_afterwords(response)` and run all middlewares completely.
 
 ### Notes
-1. If a middleware doesn't call `call_next()` it raises `middlewares.CallNextNotUsedError`. It means that the middleware forcibly decline middlewares handlers and response should be sent immediately without routers running. `call_routers` should looks like this:
+If a middleware doesn't call `call_next()` it raises `middlewares.CallNextNotUsedError`. It means that the middleware forcibly decline middlewares handlers and response should be sent immediately without routers running. `call_routers` should looks like this:
 ```python
 import middlewares
 
@@ -121,7 +121,8 @@ async def call_routers(self, request):
         return SomeBadResponseBecauseNotRouted(400, "Require a header!")
     
 ```
-2. If a middleware doesn't return anything, middlewares dispatching declined forcibly too but after routers handled. (Return nothing means there isn't any `return` or `return None` used). It raises `middlewares.NothingReturnedError`
+***
+If a middleware doesn't return anything, middlewares dispatching declined forcibly too but after routers handled. (Return nothing means there isn't any `return` or `return None` used). It raises `middlewares.NothingReturnedError`
 ```python
 import middlewares
 
