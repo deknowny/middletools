@@ -4,14 +4,14 @@ import sys
 import typing
 
 from middlewares.exceptions import CallNextNotUsedError, NothingReturnedError
-from middlewares.types import MiddlewareHandler, InboxType, OutboxType
-
+from middlewares.types import InboxType, MiddlewareHandler, OutboxType
 
 _should_show_cancel_message = sys.version_info >= (3, 9)
 
 
 async def read_forewords(
-    *middlewares: MiddlewareHandler[InboxType, OutboxType], inbox_value: InboxType
+    *middlewares: MiddlewareHandler[InboxType, OutboxType],
+    inbox_value: InboxType,
 ) -> typing.Callable[[OutboxType], typing.Awaitable[OutboxType]]:
     twitched_middlewares: typing.List[_MiddlewareDispatchingInfo] = []
     for middleware in middlewares:
@@ -22,7 +22,7 @@ async def read_forewords(
                 call_next_give_control,
                 call_next_return_control,
                 middleware,
-                inbox_value
+                inbox_value,
             )
         )
         # Wait when middleware call `call_next` or not called at all
@@ -34,7 +34,7 @@ async def read_forewords(
                 message=(
                     "Middleware dispatching stopped because"
                     f"{middleware} doesn't call `call_next`'"
-                )
+                ),
             )
             raise CallNextNotUsedError(middleware)
         else:
@@ -62,7 +62,9 @@ class _MiddlewareDispatchingInfo(typing.NamedTuple):
     call_next_return_control: asyncio.Future
 
 
-async def _cancel_tasks(*dispatching_info: _MiddlewareDispatchingInfo, message: str):
+async def _cancel_tasks(
+    *dispatching_info: _MiddlewareDispatchingInfo, message: str
+):
     for info in dispatching_info:
         try:
             if _should_show_cancel_message:
@@ -75,7 +77,8 @@ async def _cancel_tasks(*dispatching_info: _MiddlewareDispatchingInfo, message: 
 
 
 def _call_next_bounder(
-    call_next_give_control: asyncio.Future, call_next_return_control: asyncio.Future
+    call_next_give_control: asyncio.Future,
+    call_next_return_control: asyncio.Future,
 ):
     async def call_next():
         call_next_give_control.set_result(_GiveControlReason.CALL_NEXT_USED)
@@ -91,17 +94,23 @@ async def _done_mock(
     middleware: MiddlewareHandler[InboxType, OutboxType],
     inbox_value: InboxType,
 ) -> OutboxType:
-    call_next = _call_next_bounder(call_next_give_control, call_next_return_control)
+    call_next = _call_next_bounder(
+        call_next_give_control, call_next_return_control
+    )
     middleware_result = await middleware(inbox_value, call_next)
 
     # If `call_next` hasn't been called
     if not call_next_give_control.done():
-        call_next_give_control.set_result(_GiveControlReason.CALL_NEXT_IGNORED)
+        call_next_give_control.set_result(
+            _GiveControlReason.CALL_NEXT_IGNORED
+        )
 
     return middleware_result
 
 
-def _read_afterwords_bounder(*twitched_middlewares: _MiddlewareDispatchingInfo):
+def _read_afterwords_bounder(
+    *twitched_middlewares: _MiddlewareDispatchingInfo,
+):
     async def read_afterword(outbox_value):
         for dispatching_info in reversed(twitched_middlewares):
             dispatching_info.call_next_return_control.set_result(outbox_value)
@@ -113,7 +122,7 @@ def _read_afterwords_bounder(*twitched_middlewares: _MiddlewareDispatchingInfo):
                     message=(
                         "Middleware dispatching stopped because"
                         f"{dispatching_info.middleware} returns nothing"
-                    )
+                    ),
                 )
                 raise NothingReturnedError(dispatching_info.middleware)
 

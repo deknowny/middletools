@@ -7,7 +7,7 @@ from middlewares.types import MiddlewareHandler
 class _ContainMiddleware(Exception):
     middleware: MiddlewareHandler
 
-    __slots__ = ("middleware", )
+    __slots__ = ("middleware",)
 
 
 class CallNextNotUsedError(_ContainMiddleware):

@@ -14,6 +14,3 @@ class OutboxType:
 class MockPayload(typing.NamedTuple):
     value: typing.Any
     stamp: float
-
-
-
