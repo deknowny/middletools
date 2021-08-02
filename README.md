@@ -7,6 +7,47 @@
 
 This is a python library that allows you to integrate middlewares-based system to your project. It contains base tools for creating and running middlewares with `async-await` style
 
+```python
+import asyncio
+
+import middletools
+
+
+async def middleware1(request, call_next):
+    print("Run middleware1")
+    response = await call_next()
+    print("End middleware1")
+    return response
+
+    
+async def middleware2(request, call_next):
+    print("Run middleware2")
+    response = await call_next()
+    print("End middleware2")
+    return response
+
+
+async def main():
+    read_afterwords = await middletools.read_forewords(
+        middleware1, middleware2,
+        inbox_value=None  # Pass `request` value
+    )
+    print("Some other code...")
+    await read_afterwords(None)  # Pass `response` value
+    
+
+asyncio.run(main())
+```
+Output is
+```
+Run middleware1 (request: 123)
+Run middleware2 (request: 123)
+Some other code...
+End middleware2 (response: 456)
+End middleware1 (response: 456)
+```
+
+
 ## Installation
 ### PyPI
 ```shell
