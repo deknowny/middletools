@@ -3,8 +3,8 @@ import enum
 import sys
 import typing
 
-from middlewares.exceptions import CallNextNotUsedError, NothingReturnedError
-from middlewares.types import InboxType, MiddlewareHandler, OutboxType
+from middletools.exceptions import CallNextNotUsedError, NothingReturnedError
+from middletools.types import InboxType, MiddlewareHandler, OutboxType
 
 _should_show_cancel_message = sys.version_info >= (3, 9)
 

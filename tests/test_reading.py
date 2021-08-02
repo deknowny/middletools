@@ -1,10 +1,9 @@
 import time
-import typing
 import unittest.mock
 
 import pytest
 
-import middlewares
+import middletools
 from tests.types import InboxType, MockPayload, OutboxType
 
 
@@ -16,7 +15,7 @@ async def test_normal_case():
     middleware2_after_call = unittest.mock.Mock()
 
     async def middleware1(
-        inbox: InboxType, call_next: middlewares.types.CallNext
+        inbox: InboxType, call_next: middletools.types.CallNext
     ) -> OutboxType:
         middleware1_before_call(MockPayload(inbox, time.monotonic()))
         outbox = await call_next()
@@ -24,7 +23,7 @@ async def test_normal_case():
         return outbox
 
     async def middleware2(
-        inbox: InboxType, call_next: middlewares.types.CallNext
+        inbox: InboxType, call_next: middletools.types.CallNext
     ) -> OutboxType:
         middleware2_before_call(MockPayload(inbox, time.monotonic()))
         outbox = await call_next()
@@ -35,7 +34,7 @@ async def test_normal_case():
     outbox_value = OutboxType()
 
     # Step: 1
-    read_afterword = await middlewares.read_forewords(
+    read_afterword = await middletools.read_forewords(
         middleware1, middleware2, inbox_value=inbox_value
     )
 

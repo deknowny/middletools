@@ -31,3 +31,6 @@ htmlcov
 
 # Tox enviroment
 .tox/
+
+# Builds
+dist/

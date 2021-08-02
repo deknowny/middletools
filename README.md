@@ -1,4 +1,4 @@
-# Middlewares
+# Middletools
 [![Coverage Status](https://coveralls.io/repos/github/deknowny/middlewares/badge.svg)](https://coveralls.io/github/deknowny/middlewares)
 ![Supported python version](https://img.shields.io/pypi/pyversions/middlewares)
 ![PyPI package version](https://img.shields.io/pypi/v/middlewares)
@@ -10,7 +10,7 @@ This is a python library that allows you to integrate middlewares-based system t
 ## Installation
 ### PyPI
 ```shell
-python -m pip install middlewares
+python -m pip install middletools
 ```
 ### GitHub
 ```shell
@@ -54,7 +54,7 @@ class Router:
 ***
 ### Create middleware function
 ```python
-import middlewares
+import middletools
 
 ...
 ...
@@ -62,7 +62,7 @@ import middlewares
 # Adding a middleware handler to an abstract 
 @router.add_middleware
 async def my_middleware(
-    request: SomeRequest, call_next: middlewares.types.CallNext
+    request: SomeRequest, call_next: middletools.types.CallNext
 ) -> SomeResponse:
     # Just check if header exists, id not set the default value
     if "X-Required-Header" not in request.headers:
@@ -76,13 +76,13 @@ Here we add a header to client request if clint didn't do it. Then `await call_n
 ```python
 import typing
 
-import middlewares
+import middletools
 
 
 class Router:
     # You can use generics to describe middleware hand;er
     middlewares: typing.List[
-        middlewares.types.MiddlewareHandler[
+        middletools.types.MiddlewareHandler[
             SomeRequest, SomeResponse
         ]
     ]
@@ -90,7 +90,7 @@ class Router:
     ...
 
     async def call_routers(self, request):
-        read_afterwords = await middlewares.read_forewords(
+        read_afterwords = await middletools.read_forewords(
             *self.middlewares, inbox_value=request
         )
         for router in self.routers:
@@ -106,12 +106,12 @@ When we do all our stuff and get the router response we can call `await read_aft
 ### Notes
 If a middleware doesn't call `call_next()` it raises `middlewares.CallNextNotUsedError`. It means that the middleware forcibly decline middlewares handlers and response should be sent immediately without routers running. `call_routers` should looks like this:
 ```python
-import middlewares
+import middletools
 
 
 async def call_routers(self, request):
     try:
-        read_afterwords = await middlewares.read_forewords(
+        read_afterwords = await middletools.read_forewords(
             *self.middlewares, inbox_value=request
         )
         for router in self.routers:
@@ -119,19 +119,19 @@ async def call_routers(self, request):
             response = ...
             await read_afterwords(response)
             return response
-    except middlewares.CallNextNotUsedError:
+    except middletools.CallNextNotUsedError:
         return SomeBadResponseBecauseNotRouted(400, "Require a header!")
     
 ```
 ***
 If a middleware doesn't return anything, middlewares dispatching declined forcibly too but after routers handled. (Return nothing means there isn't any `return` or `return None` used). It raises `middlewares.NothingReturnedError`
 ```python
-import middlewares
+import middletools
 
 
 async def call_routers(self, request):
     try:
-        read_afterwords = await middlewares.read_forewords(
+        read_afterwords = await middletools.read_forewords(
             *self.middlewares, inbox_value=request
         )
         for router in self.routers:
@@ -139,9 +139,9 @@ async def call_routers(self, request):
             response = ...
             await read_afterwords(response)
             return response
-    except middlewares.CallNextNotUsedError:
+    except middletools.CallNextNotUsedError:
         return SomeBadResponseBecauseNotRouted(400, "Require a header!")
-    except middlewares.NothingReturnedError:
+    except middletools.NothingReturnedError:
         return SomeBadResponseBecauseMiddlewareDntReturnResponse(
             500, "Oops, internal server error"
         )

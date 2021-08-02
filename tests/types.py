@@ -1,7 +1,5 @@
 import typing
 
-import pytest
-
 
 class InboxType:
     pass

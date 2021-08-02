@@ -1,6 +1,6 @@
 import dataclasses
 
-from middlewares.types import MiddlewareHandler
+from middletools.types import MiddlewareHandler
 
 
 @dataclasses.dataclass(frozen=True, repr=False)
