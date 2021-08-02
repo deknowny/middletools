@@ -1,8 +1,8 @@
 # Middletools
-[![Coverage Status](https://coveralls.io/repos/github/deknowny/middlewares/badge.svg)](https://coveralls.io/github/deknowny/middlewares)
-![Supported python version](https://img.shields.io/pypi/pyversions/middlewares)
-![PyPI package version](https://img.shields.io/pypi/v/middlewares)
-![Downloads](https://img.shields.io/pypi/dm/middlewares)
+[![Coverage Status](https://coveralls.io/repos/github/deknowny/middletools/badge.svg)](https://coveralls.io/github/deknowny/middletools)
+![Supported python version](https://img.shields.io/pypi/pyversions/middletools)
+![PyPI package version](https://img.shields.io/pypi/v/middletools)
+![Downloads](https://img.shields.io/pypi/dm/middletools)
 
 
 This is a python library that allows you to integrate middlewares-based system to your project. It contains base tools for creating and running middlewares with `async-await` style
