@@ -7,7 +7,21 @@ name = "middletools"
 version = "0.1.0"
 description = "This python library allows you integrate async-await middleware-based system to your project"
 authors = ["deknowny <deknowny@gmail.com>"]
+readme = "README.md"
+homepage = "https://github.com/deknowny/middletools"
 license = "MIT"
+keywords = [
+    "python", "library", "middlewares", "create", "utils"
+]
+classifiers = [
+    "Framework :: AsyncIO",
+    "Intended Audience :: Developers",
+    "Typing :: Typed",
+    "Topic :: Utilities",
+    "Python :: 3.9",
+    "Python :: 3.8",
+    "Python :: 3.7"
+]
 
 [tool.poetry.dependencies]
 python = "^3.7"
