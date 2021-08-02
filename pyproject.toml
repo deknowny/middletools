@@ -1,3 +1,7 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry]
 name = "middlewares"
 version = "0.1.0"
@@ -19,6 +23,6 @@ pytest-asyncio = "^0.15.1"
 coveralls = "^3.2.0"
 PyYAML = "^5.4.1"
 
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 78
